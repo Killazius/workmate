@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func LoadLoggerConfig(path string) (*zap.SugaredLogger, error) {
+func LoadFromConfig(path string) (*zap.SugaredLogger, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return nil, fmt.Errorf("logger config file does not exist: %s", path)
 	}

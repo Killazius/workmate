@@ -14,6 +14,7 @@ type Config struct {
 
 type HTTPConfig struct {
 	Port        string        `yaml:"port"`
+	Host        string        `yaml:"host"`
 	Timeout     time.Duration `yaml:"timeout"`
 	IdleTimeout time.Duration `yaml:"idle_timeout"`
 }
