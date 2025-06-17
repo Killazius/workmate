@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/Killazius/workmate/internal/domain"
 	"github.com/Killazius/workmate/internal/storage"
+	"time"
 )
 
 type TaskRepo struct {
@@ -15,44 +16,27 @@ func New(storage storage.TaskStorage) *TaskRepo {
 	}
 }
 
-func (r *TaskRepo) Create(task *domain.Task) error {
-	if _, exists := r.storage.Get(task.ID); exists {
-		return domain.ErrTaskAlreadyExists
-	}
-
-	createdTask := r.storage.Create()
-
-	*createdTask = *task
-	createdTask.ID = task.ID
-
-	return nil
+func (r *TaskRepo) Create(time time.Time) (*domain.Task, error) {
+	createdTask := r.storage.Create(time)
+	return createdTask, nil
 }
 
-func (r *TaskRepo) GetByID(id string) (*domain.Task, error) {
+func (r *TaskRepo) GetByID(id int64) (*domain.Task, error) {
 
 	task, exists := r.storage.Get(id)
 	if !exists {
 		return nil, domain.ErrTaskNotFound
 	}
 
-	copyTask := *task
-	return &copyTask, nil
+	return task, nil
 }
 
 func (r *TaskRepo) Update(task *domain.Task) error {
-
-	if _, exists := r.storage.Get(task.ID); !exists {
-		return domain.ErrTaskNotFound
-	}
-
-	r.storage.Delete(task.ID)
-	newTask := r.storage.Create()
-	*newTask = *task
-	newTask.ID = task.ID
-	return nil
+	_, err := r.storage.Update(task)
+	return err
 }
 
-func (r *TaskRepo) Delete(id string) error {
+func (r *TaskRepo) Delete(id int64) error {
 
 	if _, exists := r.storage.Get(id); !exists {
 		return domain.ErrTaskNotFound
