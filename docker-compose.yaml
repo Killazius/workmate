@@ -1,0 +1,16 @@
+services:
+  workmate:
+    container_name: workmate
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 5s
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    image: workmate:latest
+    environment:
+      CONFIG_PATH: ${CONFIG_PATH}
